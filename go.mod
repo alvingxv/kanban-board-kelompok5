@@ -1,4 +1,4 @@
-module github.com/alvingxv/kanban-board-fp
+module github.com/alvingxv/kanban-board-kelompok5
 
 go 1.19
 

@@ -3,6 +3,7 @@ package database
 import (
 	"fmt"
 
+	"github.com/alvingxv/kanban-board-kelompok5/entity"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -27,7 +28,7 @@ func HandleDatabaseConnection() {
 		panic("failed connect to database")
 	}
 
-	db.AutoMigrate()
+	db.AutoMigrate(entity.User{})
 }
 
 func GetDatabaseInstance() *gorm.DB {
