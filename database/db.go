@@ -22,7 +22,8 @@ var db *gorm.DB
 func HandleDatabaseConnection() {
 	psqlinfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 
-	db, err := gorm.Open(postgres.Open(psqlinfo), &gorm.Config{})
+	var err error
+	db, err = gorm.Open(postgres.Open(psqlinfo), &gorm.Config{})
 
 	if err != nil {
 		panic("failed connect to database")
