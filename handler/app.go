@@ -2,13 +2,14 @@ package handler
 
 import (
 	"github.com/alvingxv/kanban-board-kelompok5/database"
+	"github.com/alvingxv/kanban-board-kelompok5/pkg"
 	"github.com/alvingxv/kanban-board-kelompok5/repository/user_repository/user_pg"
 	"github.com/alvingxv/kanban-board-kelompok5/service"
 	"github.com/gin-gonic/gin"
 )
 
 func StartApp() {
-	port := "8000"
+	port := pkg.GoDotEnvVariable("PORT")
 
 	database.HandleDatabaseConnection()
 
@@ -24,5 +25,5 @@ func StartApp() {
 	r.POST("/register", userHandler.Register)
 	r.POST("/login", userHandler.Login)
 
-	r.Run(":" + port)
+	r.Run("127.0.0.1:" + port)
 }

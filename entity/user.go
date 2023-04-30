@@ -1,15 +1,15 @@
 package entity
 
 import (
-	"os"
 	"time"
 
+	"github.com/alvingxv/kanban-board-kelompok5/pkg"
 	"github.com/alvingxv/kanban-board-kelompok5/pkg/errs"
 	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
 )
 
-var secret string = os.Getenv("SECRET")
+var secret = pkg.GoDotEnvVariable("SECRET")
 
 type User struct {
 	ID        uint   `gorm:"primaryKey"`
