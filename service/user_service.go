@@ -42,17 +42,17 @@ func (u *userService) Register(payload dto.RegisterRequest) (*dto.RegisterRespon
 		return nil, errs
 	}
 
-	returned, errs := u.userRepo.CreateNewUser(user)
+	errs = u.userRepo.CreateNewUser(&user)
 
 	if errs != nil {
 		return nil, errs
 	}
 
 	response := dto.RegisterResponse{
-		ID:        returned.ID,
-		Fullname:  returned.Fullname,
-		Email:     returned.Email,
-		CreatedAt: returned.CreatedAt,
+		ID:        user.ID,
+		Fullname:  user.Fullname,
+		Email:     user.Email,
+		CreatedAt: user.CreatedAt,
 	}
 
 	return &response, nil
