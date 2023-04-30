@@ -1,11 +1,15 @@
 package entity
 
 import (
+	"os"
 	"time"
 
 	"github.com/alvingxv/kanban-board-kelompok5/pkg/errs"
+	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
 )
+
+var secret string = os.Getenv("SECRET")
 
 type User struct {
 	ID        uint   `gorm:"primaryKey"`
@@ -29,4 +33,31 @@ func (u *User) HashPassword() errs.MessageErr {
 	u.Password = string(bs)
 
 	return nil
+}
+
+func (u *User) ComparePassword(password string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
+	return err == nil
+}
+
+func (u *User) GenerateToken() string {
+	claims := u.tokenClaim()
+
+	return u.signToken(claims)
+}
+
+func (u *User) tokenClaim() jwt.MapClaims {
+	return jwt.MapClaims{
+		"id":    u.ID,
+		"email": u.Email,
+		"exp":   time.Now().Add(time.Hour * 10).Unix(),
+	}
+}
+
+func (u *User) signToken(claims jwt.Claims) string {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	tokenstring, _ := token.SignedString([]byte(secret))
+
+	return tokenstring
 }

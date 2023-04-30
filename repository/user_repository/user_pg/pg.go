@@ -1,6 +1,7 @@
 package user_pg
 
 import (
+	"errors"
 	"strings"
 
 	"github.com/alvingxv/kanban-board-kelompok5/entity"
@@ -29,4 +30,21 @@ func (u *userPG) CreateNewUser(user *entity.User) errs.MessageErr {
 	}
 
 	return nil
+}
+
+func (u *userPG) GetUserByEmail(email string) (*entity.User, errs.MessageErr) {
+
+	user := entity.User{}
+
+	err := u.db.Debug().Where("email = ?", email).First(&user).Error
+
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errs.NewNotFoundError("User didn't exist")
+		}
+		return nil, errs.NewInternalServerError("Internal Server Error")
+	}
+
+	return &user, nil
+
 }

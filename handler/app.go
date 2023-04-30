@@ -22,6 +22,7 @@ func StartApp() {
 	userHandler := NewUserHandler(userService)
 
 	r.POST("/register", userHandler.Register)
+	r.POST("/login", userHandler.Login)
 
 	r.Run(":" + port)
 }

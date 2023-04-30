@@ -1,6 +1,8 @@
 package service
 
 import (
+	"net/http"
+
 	"github.com/alvingxv/kanban-board-kelompok5/dto"
 	"github.com/alvingxv/kanban-board-kelompok5/entity"
 	"github.com/alvingxv/kanban-board-kelompok5/pkg/errs"
@@ -10,6 +12,7 @@ import (
 
 type UserService interface {
 	Register(payload dto.RegisterRequest) (*dto.RegisterResponse, errs.MessageErr)
+	Login(payload dto.LoginRequest) (*dto.LoginResponse, errs.MessageErr)
 }
 
 type userService struct {
@@ -53,6 +56,38 @@ func (u *userService) Register(payload dto.RegisterRequest) (*dto.RegisterRespon
 		Fullname:  user.Fullname,
 		Email:     user.Email,
 		CreatedAt: user.CreatedAt,
+	}
+
+	return &response, nil
+}
+
+func (u *userService) Login(payload dto.LoginRequest) (*dto.LoginResponse, errs.MessageErr) {
+
+	_, errv := govalidator.ValidateStruct(payload)
+
+	if errv != nil {
+		return nil, errs.NewBadRequest(errv.Error())
+	}
+
+	user, err := u.userRepo.GetUserByEmail(payload.Email)
+
+	if err != nil {
+		if err.Status() == http.StatusNotFound {
+			return nil, errs.NewBadRequest("invalid email/password")
+		}
+		return nil, err
+	}
+
+	isValidPassword := user.ComparePassword(payload.Password)
+
+	if !isValidPassword {
+		return nil, errs.NewBadRequest("invalid email/password")
+	}
+
+	token := user.GenerateToken()
+
+	response := dto.LoginResponse{
+		Token: token,
 	}
 
 	return &response, nil
