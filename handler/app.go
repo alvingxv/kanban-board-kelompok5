@@ -2,6 +2,8 @@ package handler
 
 import (
 	"github.com/alvingxv/kanban-board-kelompok5/database"
+	"github.com/alvingxv/kanban-board-kelompok5/repository/user_repository/user_pg"
+	"github.com/alvingxv/kanban-board-kelompok5/service"
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,13 +14,14 @@ func StartApp() {
 
 	db := database.GetDatabaseInstance()
 
-	_ = db
-
 	r := gin.Default()
 
-	r.GET("/", func(ctx *gin.Context) {
-		ctx.JSON(200, "asd")
-	})
+	// User Injection
+	userRepo := user_pg.NewUserPG(db)
+	userService := service.NewUserService(userRepo)
+	userHandler := NewUserHandler(userService)
+
+	r.POST("/register", userHandler.Register)
 
 	r.Run(":" + port)
 }
