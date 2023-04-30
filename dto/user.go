@@ -14,3 +14,12 @@ type RegisterResponse struct {
 	Email     string    `json:"email"`
 	CreatedAt time.Time `json:"created_at"`
 }
+
+type LoginRequest struct {
+	Email    string `json:"email" valid:"required~email cannot be empty"`
+	Password string `json:"password" valid:"required~password cannot be empty"`
+}
+
+type LoginResponse struct {
+	Token string `json:"token"`
+}
