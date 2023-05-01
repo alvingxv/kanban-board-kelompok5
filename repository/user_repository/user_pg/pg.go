@@ -61,3 +61,14 @@ func (u *userPG) UpdateUser(user *entity.User) errs.MessageErr {
 
 	return nil
 }
+
+func (u *userPG) DeleteUser(id uint) errs.MessageErr {
+
+	result := u.db.Delete(&entity.User{}, id)
+
+	if result.Error != nil {
+		return errs.NewInternalServerError("Internal Server Error")
+	}
+
+	return nil
+}

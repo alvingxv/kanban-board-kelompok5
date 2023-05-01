@@ -82,3 +82,19 @@ func (uh *userHandler) UpdateUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, result)
 
 }
+
+func (uh *userHandler) DeleteUser(ctx *gin.Context) {
+	userData := ctx.MustGet("userData").(*entity.User)
+
+	err := uh.userService.DeleteUser(userData.ID)
+
+	if err != nil {
+		ctx.JSON(err.Status(), err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, &gin.H{
+		"Message": "Your Account has been successfully deleted",
+	})
+
+}

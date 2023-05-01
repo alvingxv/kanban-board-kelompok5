@@ -14,6 +14,7 @@ type UserService interface {
 	Register(payload dto.RegisterRequest) (*dto.RegisterResponse, errs.MessageErr)
 	Login(payload dto.LoginRequest) (*dto.LoginResponse, errs.MessageErr)
 	UpdateUser(payload dto.UpdateRequest, userdata *entity.User) (*dto.UpdateResponse, errs.MessageErr)
+	DeleteUser(id uint) errs.MessageErr
 }
 
 type userService struct {
@@ -124,4 +125,15 @@ func (u *userService) UpdateUser(payload dto.UpdateRequest, userdata *entity.Use
 	}
 
 	return &response, nil
+}
+
+func (u *userService) DeleteUser(id uint) errs.MessageErr {
+	err := u.userRepo.DeleteUser(id)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+
 }
