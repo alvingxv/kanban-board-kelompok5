@@ -48,3 +48,16 @@ func (u *userPG) GetUserByEmail(email string) (*entity.User, errs.MessageErr) {
 	return &user, nil
 
 }
+
+func (u *userPG) UpdateUser(user *entity.User) errs.MessageErr {
+	result := u.db.Save(&user)
+
+	if result.Error != nil {
+		if strings.Contains(result.Error.Error(), "duplicate key value violates unique constraint \"users_email_key") {
+			return errs.NewBadRequest("User Already Exist")
+		}
+		return errs.NewInternalServerError("Internal Server Error")
+	}
+
+	return nil
+}

@@ -13,6 +13,7 @@ import (
 type UserService interface {
 	Register(payload dto.RegisterRequest) (*dto.RegisterResponse, errs.MessageErr)
 	Login(payload dto.LoginRequest) (*dto.LoginResponse, errs.MessageErr)
+	UpdateUser(payload dto.UpdateRequest, userdata *entity.User) (*dto.UpdateResponse, errs.MessageErr)
 }
 
 type userService struct {
@@ -88,6 +89,38 @@ func (u *userService) Login(payload dto.LoginRequest) (*dto.LoginResponse, errs.
 
 	response := dto.LoginResponse{
 		Token: token,
+	}
+
+	return &response, nil
+}
+
+func (u *userService) UpdateUser(payload dto.UpdateRequest, userdata *entity.User) (*dto.UpdateResponse, errs.MessageErr) {
+	_, errv := govalidator.ValidateStruct(payload)
+
+	if errv != nil {
+		return nil, errs.NewBadRequest(errv.Error())
+	}
+	user := entity.User{
+		ID:        userdata.ID,
+		Fullname:  payload.Fullname,
+		Email:     payload.Email,
+		Password:  userdata.Password,
+		Role:      userdata.Role,
+		CreatedAt: userdata.CreatedAt,
+		UpdatedAt: userdata.UpdatedAt,
+	}
+
+	err := u.userRepo.UpdateUser(&user)
+
+	if err != nil {
+		return nil, err
+	}
+
+	response := dto.UpdateResponse{
+		ID:        user.ID,
+		Fullname:  user.Fullname,
+		Email:     user.Email,
+		UpdatedAt: user.UpdatedAt,
 	}
 
 	return &response, nil

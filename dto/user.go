@@ -23,3 +23,15 @@ type LoginRequest struct {
 type LoginResponse struct {
 	Token string `json:"token"`
 }
+
+type UpdateRequest struct {
+	Fullname string `json:"full_name"`
+	Email    string `json:"email"`
+}
+
+type UpdateResponse struct {
+	ID        uint      `json:"id"`
+	Fullname  string    `json:"full_name"`
+	Email     string    `json:"email"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
