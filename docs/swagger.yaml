@@ -1,0 +1,47 @@
+definitions:
+  dto.RegisterRequest:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+      password:
+        type: string
+    type: object
+  dto.RegisterResponse:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /users/register:
+    post:
+      consumes:
+      - application/json
+      description: Create New User Data
+      operationId: create-new-user
+      parameters:
+      - description: request body json
+        in: body
+        name: RequestBody
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.RegisterResponse'
+      tags:
+      - users
+swagger: "2.0"

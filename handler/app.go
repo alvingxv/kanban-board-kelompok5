@@ -6,16 +6,16 @@ import (
 	"github.com/alvingxv/kanban-board-kelompok5/repository/user_repository/user_pg"
 	"github.com/alvingxv/kanban-board-kelompok5/service"
 	"github.com/gin-gonic/gin"
+	"github.com/swaggo/swag/example/override/docs"
+
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func StartApp() {
-	port := helpers.GoDotEnvVariable("PORT")
 
 	database.HandleDatabaseConnection()
-
 	db := database.GetDatabaseInstance()
-
-	r := gin.Default()
 
 	// User Injection
 	userRepo := user_pg.NewUserPG(db)
@@ -24,6 +24,17 @@ func StartApp() {
 
 	// Auth Injecttion
 	authService := service.NewAuthService(userRepo)
+
+	port := helpers.GoDotEnvVariable("PORT")
+	r := gin.Default()
+
+	docs.SwaggerInfo.Title = "Kanban Board Kelompok 5"
+	docs.SwaggerInfo.Description = "Final Project 3 Hactiv8 by Kelompok 5"
+	docs.SwaggerInfo.Version = "1.0"
+	docs.SwaggerInfo.Host = "localhost"
+	docs.SwaggerInfo.Schemes = []string{"http"}
+
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	userRoute := r.Group("/users")
 	{

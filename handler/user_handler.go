@@ -20,6 +20,15 @@ func NewUserHandler(userService service.UserService) userHandler {
 	}
 }
 
+// UserRegister godoc
+// @Tags users
+// @Description Create New User Data
+// @ID create-new-user
+// @Accept json
+// @Produce json
+// @Param RequestBody body dto.RegisterRequest true "request body json"
+// @Success 201 {object} dto.RegisterResponse
+// @Router /users/register [post]
 func (uh *userHandler) Register(ctx *gin.Context) {
 	var newUserRequest dto.RegisterRequest
 
