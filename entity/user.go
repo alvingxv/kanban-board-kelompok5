@@ -18,6 +18,7 @@ type User struct {
 	Email     string `gorm:"not null;unique"`
 	Password  string `gorm:"not null"`
 	Role      string `gorm:"not null;default:member"`
+	Task      []Task
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
