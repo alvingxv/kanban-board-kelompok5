@@ -13,7 +13,8 @@ type categoryService struct {
 }
 
 type CategoryService interface {
-	CreateCategory(payload dto.CreateCategoryRequest) (*dto.CreateCategoryResponse, errs.MessageErr)
+	CreateCategory(payload dto.CategoryRequest) (*dto.CreateCategoryResponse, errs.MessageErr)
+	UpdateCategory(payload dto.CategoryRequest, id uint) (*dto.UpdateCategoryResponse, errs.MessageErr)
 }
 
 func NewCategoryService(categoryRepository category_repository.CategoryRepository) CategoryService {
@@ -22,7 +23,7 @@ func NewCategoryService(categoryRepository category_repository.CategoryRepositor
 	}
 }
 
-func (cs *categoryService) CreateCategory(payload dto.CreateCategoryRequest) (*dto.CreateCategoryResponse, errs.MessageErr) {
+func (cs *categoryService) CreateCategory(payload dto.CategoryRequest) (*dto.CreateCategoryResponse, errs.MessageErr) {
 
 	_, errv := govalidator.ValidateStruct(payload)
 
@@ -44,6 +45,34 @@ func (cs *categoryService) CreateCategory(payload dto.CreateCategoryRequest) (*d
 		Id:        category.ID,
 		Type:      category.Type,
 		CreatedAt: category.CreatedAt,
+	}
+
+	return &response, nil
+}
+
+func (cs *categoryService) UpdateCategory(payload dto.CategoryRequest, id uint) (*dto.UpdateCategoryResponse, errs.MessageErr) {
+
+	_, errv := govalidator.ValidateStruct(payload)
+
+	if errv != nil {
+		return nil, errs.NewBadRequest(errv.Error())
+	}
+
+	category := &entity.Category{
+		ID:   id,
+		Type: payload.Type,
+	}
+
+	err := cs.categoryRepository.UpdateCategory(category)
+
+	if err != nil {
+		return nil, err
+	}
+
+	response := dto.UpdateCategoryResponse{
+		Id:        category.ID,
+		Type:      category.Type,
+		UpdatedAt: category.UpdatedAt,
 	}
 
 	return &response, nil

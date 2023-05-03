@@ -6,6 +6,7 @@ import (
 	"github.com/alvingxv/kanban-board-kelompok5/dto"
 	"github.com/alvingxv/kanban-board-kelompok5/entity"
 	"github.com/alvingxv/kanban-board-kelompok5/pkg/errs"
+	"github.com/alvingxv/kanban-board-kelompok5/pkg/helpers"
 	"github.com/alvingxv/kanban-board-kelompok5/service"
 	"github.com/gin-gonic/gin"
 )
@@ -31,7 +32,7 @@ func (ch *categoryHandler) CreateCategory(ctx *gin.Context) {
 		return
 	}
 
-	var categoryRequest dto.CreateCategoryRequest
+	var categoryRequest dto.CategoryRequest
 
 	if err := ctx.ShouldBindJSON(&categoryRequest); err != nil {
 		errBindJson := errs.NewUnprocessibleEntityError("invalid request body")
@@ -48,4 +49,39 @@ func (ch *categoryHandler) CreateCategory(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusCreated, result)
 
+}
+
+func (ch *categoryHandler) UpdateCategory(ctx *gin.Context) {
+	userData := ctx.MustGet("userData").(*entity.User)
+
+	if userData.Role != "admin" {
+		errUnauthorized := errs.NewUnauthorizedError("Unauthorized user")
+
+		ctx.JSON(errUnauthorized.Status(), errUnauthorized)
+		return
+	}
+
+	var categoryRequest dto.CategoryRequest
+
+	if err := ctx.ShouldBindJSON(&categoryRequest); err != nil {
+		errBindJson := errs.NewUnprocessibleEntityError("invalid request body")
+		ctx.JSON(errBindJson.Status(), errBindJson)
+		return
+	}
+
+	id, err := helpers.GetParamId(ctx, "id")
+
+	if err != nil {
+		ctx.JSON(err.Status(), err)
+		return
+	}
+
+	result, err := ch.categoryService.UpdateCategory(categoryRequest, id)
+
+	if err != nil {
+		ctx.JSON(err.Status(), err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, result)
 }

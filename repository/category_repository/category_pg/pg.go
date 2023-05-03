@@ -28,3 +28,18 @@ func (c *categoryPG) CreateCategory(category *entity.Category) errs.MessageErr {
 	return nil
 
 }
+
+func (c *categoryPG) UpdateCategory(category *entity.Category) errs.MessageErr {
+	result := c.db.Select("id").First(&category, category.ID)
+	if result.Error != nil {
+		return errs.NewNotFoundError("not found")
+	}
+
+	result = c.db.Model(&category).Update("type", category.Type)
+
+	if result.Error != nil {
+		return errs.NewInternalServerError("Internal Server Error")
+	}
+
+	return nil
+}

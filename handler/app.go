@@ -55,6 +55,7 @@ func StartApp() {
 	categoryRoute := r.Group("/categories")
 	{
 		categoryRoute.POST("", authService.Authentication(), categoryHandler.CreateCategory)
+		categoryRoute.PATCH("/:id", authService.Authentication(), categoryHandler.UpdateCategory)
 	}
 	r.Run("127.0.0.1:" + port)
 }
