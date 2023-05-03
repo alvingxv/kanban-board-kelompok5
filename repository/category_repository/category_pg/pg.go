@@ -43,3 +43,18 @@ func (c *categoryPG) UpdateCategory(category *entity.Category) errs.MessageErr {
 
 	return nil
 }
+
+func (c *categoryPG) DeleteCategory(id uint) errs.MessageErr {
+	result := c.db.Select("id").First(&entity.Category{}, id)
+	if result.Error != nil {
+		return errs.NewNotFoundError("not found")
+	}
+
+	result = c.db.Delete(&entity.Category{}, id)
+
+	if result.Error != nil {
+		return errs.NewInternalServerError("Internal Server Error")
+	}
+
+	return nil
+}

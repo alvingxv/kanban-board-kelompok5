@@ -85,3 +85,32 @@ func (ch *categoryHandler) UpdateCategory(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, result)
 }
+
+func (ch *categoryHandler) DeleteCategory(ctx *gin.Context) {
+	userData := ctx.MustGet("userData").(*entity.User)
+
+	if userData.Role != "admin" {
+		errUnauthorized := errs.NewUnauthorizedError("Unauthorized user")
+
+		ctx.JSON(errUnauthorized.Status(), errUnauthorized)
+		return
+	}
+
+	id, err := helpers.GetParamId(ctx, "id")
+
+	if err != nil {
+		ctx.JSON(err.Status(), err)
+		return
+	}
+
+	err = ch.categoryService.DeleteCategory(id)
+
+	if err != nil {
+		ctx.JSON(err.Status(), err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "Category has been successfully deleted",
+	})
+}
