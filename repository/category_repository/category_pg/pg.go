@@ -1,6 +1,8 @@
 package category_pg
 
 import (
+	"errors"
+
 	"github.com/alvingxv/kanban-board-kelompok5/entity"
 	"github.com/alvingxv/kanban-board-kelompok5/pkg/errs"
 	"github.com/alvingxv/kanban-board-kelompok5/repository/category_repository"
@@ -53,6 +55,19 @@ func (c *categoryPG) DeleteCategory(id uint) errs.MessageErr {
 	result = c.db.Delete(&entity.Category{}, id)
 
 	if result.Error != nil {
+		return errs.NewInternalServerError("Internal Server Error")
+	}
+
+	return nil
+}
+
+func (c *categoryPG) GetCategoryById(id uint) errs.MessageErr {
+	err := c.db.Debug().First(&entity.Category{}, id).Error
+
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return errs.NewNotFoundError("Category didn't exist")
+		}
 		return errs.NewInternalServerError("Internal Server Error")
 	}
 

@@ -9,4 +9,5 @@ type CategoryRepository interface {
 	CreateCategory(category *entity.Category) errs.MessageErr
 	UpdateCategory(category *entity.Category) errs.MessageErr
 	DeleteCategory(id uint) errs.MessageErr
+	GetCategoryById(id uint) errs.MessageErr
 }
