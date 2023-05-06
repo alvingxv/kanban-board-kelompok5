@@ -4,6 +4,7 @@ import (
 	"github.com/alvingxv/kanban-board-kelompok5/database"
 	"github.com/alvingxv/kanban-board-kelompok5/pkg/helpers"
 	"github.com/alvingxv/kanban-board-kelompok5/repository/category_repository/category_pg"
+	"github.com/alvingxv/kanban-board-kelompok5/repository/task_repository/task_pg"
 	"github.com/alvingxv/kanban-board-kelompok5/repository/user_repository/user_pg"
 	"github.com/alvingxv/kanban-board-kelompok5/service"
 	"github.com/gin-gonic/gin"
@@ -27,6 +28,11 @@ func StartApp() {
 	categoryRepo := category_pg.NewCategoryPG(db)
 	categoryService := service.NewCategoryService(categoryRepo)
 	categoryHandler := NewCategoryHandler(categoryService)
+
+	// Task Injection
+	taskRepo := task_pg.NewTaskPG(db)
+	taskService := service.NewTaskService(taskRepo, categoryRepo)
+	taskHandler := NewTaskHandler(taskService)
 
 	// Auth Injecttion
 	authService := service.NewAuthService(userRepo)
@@ -57,6 +63,11 @@ func StartApp() {
 		categoryRoute.POST("", authService.Authentication(), categoryHandler.CreateCategory)
 		categoryRoute.PATCH("/:id", authService.Authentication(), categoryHandler.UpdateCategory)
 		categoryRoute.DELETE("/:id", authService.Authentication(), categoryHandler.DeleteCategory)
+	}
+
+	taskRoute := r.Group("/tasks")
+	{
+		taskRoute.POST("", authService.Authentication(), taskHandler.CreateTask)
 	}
 	r.Run("127.0.0.1:" + port)
 }
