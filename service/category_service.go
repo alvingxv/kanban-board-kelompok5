@@ -16,12 +16,47 @@ type CategoryService interface {
 	CreateCategory(payload dto.CategoryRequest) (*dto.CreateCategoryResponse, errs.MessageErr)
 	UpdateCategory(payload dto.CategoryRequest, id uint) (*dto.UpdateCategoryResponse, errs.MessageErr)
 	DeleteCategory(id uint) errs.MessageErr
+	GetCategory(userId uint) (*[]dto.GetCategoryResponse, errs.MessageErr)
 }
 
 func NewCategoryService(categoryRepository category_repository.CategoryRepository) CategoryService {
 	return &categoryService{
 		categoryRepository: categoryRepository,
 	}
+}
+
+func (cs *categoryService) GetCategory(userId uint) (*[]dto.GetCategoryResponse, errs.MessageErr) {
+	categories, err := cs.categoryRepository.GetAllCategory(userId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var responses []dto.GetCategoryResponse
+
+	for _, category := range categories {
+
+		var itemsResponses []dto.CategoryTask
+		if len(category.Tasks) == 0 {
+			itemsResponses = []dto.CategoryTask{}
+		} else {
+			for _, eachTask := range category.Tasks {
+				itemResponse := eachTask.TaskToCategoryTaskResponse()
+				itemsResponses = append(itemsResponses, itemResponse)
+			}
+		}
+
+		response := dto.GetCategoryResponse{
+			Id:        category.ID,
+			Type:      category.Type,
+			UpdatedAt: category.UpdatedAt,
+			CreatedAt: category.CreatedAt,
+			Tasks:     itemsResponses,
+		}
+		responses = append(responses, response)
+	}
+
+	return &responses, nil
 }
 
 func (cs *categoryService) CreateCategory(payload dto.CategoryRequest) (*dto.CreateCategoryResponse, errs.MessageErr) {

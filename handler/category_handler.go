@@ -114,3 +114,17 @@ func (ch *categoryHandler) DeleteCategory(ctx *gin.Context) {
 		"message": "Category has been successfully deleted",
 	})
 }
+
+func (ch *categoryHandler) GetCategory(ctx *gin.Context) {
+
+	userData := ctx.MustGet("userData").(*entity.User)
+
+	result, err := ch.categoryService.GetCategory(userData.ID)
+
+	if err != nil {
+		ctx.JSON(err.Status(), err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, result)
+}

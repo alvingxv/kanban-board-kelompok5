@@ -62,8 +62,10 @@ func StartApp() {
 
 	categoryRoute := r.Group("/categories")
 	{
+
 		categoryRoute.Use(authService.Authentication())
 
+		categoryRoute.GET("", categoryHandler.GetCategory)
 		categoryRoute.POST("", categoryHandler.CreateCategory)
 		categoryRoute.PATCH("/:id", categoryHandler.UpdateCategory)
 		categoryRoute.DELETE("/:id", categoryHandler.DeleteCategory)

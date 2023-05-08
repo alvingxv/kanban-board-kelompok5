@@ -19,6 +19,18 @@ func NewCategoryPG(db *gorm.DB) category_repository.CategoryRepository {
 	}
 }
 
+func (c *categoryPG) GetAllCategory(userId uint) ([]entity.Category, errs.MessageErr) {
+	var categories []entity.Category
+
+	result := c.db.Model(&entity.Category{}).Preload("Tasks", "user_id = ?", userId).Find(&categories).Error
+
+	if result != nil {
+		return nil, errs.NewInternalServerError("something Went Wrong")
+	}
+
+	return categories, nil
+}
+
 func (c *categoryPG) CreateCategory(category *entity.Category) errs.MessageErr {
 
 	err := c.db.Create(&category).Error
