@@ -53,25 +53,31 @@ func StartApp() {
 		userRoute.POST("/register", userHandler.Register)
 		userRoute.POST("/login", userHandler.Login)
 
-		userRoute.PUT("/update-account", authService.Authentication(), userHandler.UpdateUser)
-		userRoute.DELETE("delete-account", authService.Authentication(), userHandler.DeleteUser)
+		userRoute.Use(authService.Authentication())
+
+		userRoute.PUT("/update-account", userHandler.UpdateUser)
+		userRoute.DELETE("delete-account", userHandler.DeleteUser)
 
 	}
 
 	categoryRoute := r.Group("/categories")
 	{
-		categoryRoute.POST("", authService.Authentication(), categoryHandler.CreateCategory)
-		categoryRoute.PATCH("/:id", authService.Authentication(), categoryHandler.UpdateCategory)
-		categoryRoute.DELETE("/:id", authService.Authentication(), categoryHandler.DeleteCategory)
+		categoryRoute.Use(authService.Authentication())
+
+		categoryRoute.POST("", categoryHandler.CreateCategory)
+		categoryRoute.PATCH("/:id", categoryHandler.UpdateCategory)
+		categoryRoute.DELETE("/:id", categoryHandler.DeleteCategory)
 	}
 
 	taskRoute := r.Group("/tasks")
 	{
-		taskRoute.POST("", authService.Authentication(), taskHandler.CreateTask)
-		taskRoute.PUT("/:id", authService.Authentication(), taskHandler.EditTask)
-		taskRoute.PATCH("/update-status/:id", authService.Authentication(), taskHandler.UpdateTaskStatus)
-		taskRoute.PATCH("/update-category/:id", authService.Authentication(), taskHandler.UpdateTaskCategory)
-		taskRoute.DELETE("/:id", authService.Authentication(), taskHandler.DeleteTask)
+		taskRoute.Use(authService.Authentication())
+
+		taskRoute.POST("", taskHandler.CreateTask)
+		taskRoute.PUT("/:id", taskHandler.EditTask)
+		taskRoute.PATCH("/update-status/:id", taskHandler.UpdateTaskStatus)
+		taskRoute.PATCH("/update-category/:id", taskHandler.UpdateTaskCategory)
+		taskRoute.DELETE("/:id", taskHandler.DeleteTask)
 	}
 	r.Run("127.0.0.1:" + port)
 }
