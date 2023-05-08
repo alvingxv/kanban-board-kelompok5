@@ -31,10 +31,10 @@ type EditTaskResponse struct {
 	UpdatedAt   time.Time `json:"updated_at"`
 }
 
-type UpdateStatusRequest struct {
+type UpdateTaskStatusRequest struct {
 	Status bool `json:"status" valid:"required~status cannot be empty"`
 }
-type UpdateStatusResponse struct {
+type UpdateTaskStatusResponse struct {
 	ID          uint      `json:"id"`
 	Title       string    `json:"title"`
 	Description string    `json:"description"`

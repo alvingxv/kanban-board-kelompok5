@@ -73,7 +73,7 @@ func (th *taskHandler) EditTask(ctx *gin.Context) {
 }
 
 func (th *taskHandler) UpdateTaskStatus(ctx *gin.Context) {
-	var updateRequest dto.UpdateStatusRequest
+	var updateRequest dto.UpdateTaskStatusRequest
 
 	if err := ctx.ShouldBindJSON(&updateRequest); err != nil {
 		fmt.Print(err.Error())

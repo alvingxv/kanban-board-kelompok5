@@ -16,7 +16,7 @@ type taskService struct {
 type TaskService interface {
 	CreateTask(payload dto.CreateTaskRequest, userId uint) (*dto.CreateTaskResponse, errs.MessageErr)
 	EditTask(payload dto.EditTaskRequest, taskId uint, userId uint) (*dto.EditTaskResponse, errs.MessageErr)
-	UpdateStatusTask(payload dto.UpdateStatusRequest, taskId uint, userId uint) (*dto.UpdateStatusResponse, errs.MessageErr)
+	UpdateStatusTask(payload dto.UpdateTaskStatusRequest, taskId uint, userId uint) (*dto.UpdateTaskStatusResponse, errs.MessageErr)
 }
 
 func NewTaskService(taskRepo task_repository.TaskRepository, categoryRepo category_repository.CategoryRepository) TaskService {
@@ -94,7 +94,7 @@ func (ts *taskService) EditTask(payload dto.EditTaskRequest, taskId uint, userId
 	return &response, nil
 }
 
-func (ts *taskService) UpdateStatusTask(payload dto.UpdateStatusRequest, taskId uint, userId uint) (*dto.UpdateStatusResponse, errs.MessageErr) {
+func (ts *taskService) UpdateStatusTask(payload dto.UpdateTaskStatusRequest, taskId uint, userId uint) (*dto.UpdateTaskStatusResponse, errs.MessageErr) {
 
 	task, err := ts.taskRepo.GetTaskById(taskId)
 
@@ -114,7 +114,7 @@ func (ts *taskService) UpdateStatusTask(payload dto.UpdateStatusRequest, taskId 
 		return nil, err
 	}
 
-	response := dto.UpdateStatusResponse{
+	response := dto.UpdateTaskStatusResponse{
 		ID:          task.ID,
 		Title:       task.Title,
 		Description: task.Description,
