@@ -18,6 +18,7 @@ type TaskService interface {
 	EditTask(payload dto.EditTaskRequest, taskId uint, userId uint) (*dto.EditTaskResponse, errs.MessageErr)
 	UpdateStatusTask(payload dto.UpdateTaskStatusRequest, taskId uint, userId uint) (*dto.UpdateTaskStatusResponse, errs.MessageErr)
 	UpdateTaskCategory(payload dto.UpdateTaskCategoryRequest, taskId uint, userId uint) (*dto.UpdateTaskCategoryResponse, errs.MessageErr)
+	DeleteTask(taskId uint, userId uint) errs.MessageErr
 }
 
 func NewTaskService(taskRepo task_repository.TaskRepository, categoryRepo category_repository.CategoryRepository) TaskService {
@@ -164,4 +165,25 @@ func (ts *taskService) UpdateTaskCategory(payload dto.UpdateTaskCategoryRequest,
 	}
 
 	return &response, nil
+}
+
+func (ts *taskService) DeleteTask(taskId uint, userId uint) errs.MessageErr {
+
+	task, err := ts.taskRepo.GetTaskById(taskId)
+
+	if err != nil {
+		return err
+	}
+
+	if task.UserID != userId {
+		return errs.NewUnauthorizedError("Unauthorized")
+	}
+
+	err = ts.taskRepo.DeleteTask(taskId)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

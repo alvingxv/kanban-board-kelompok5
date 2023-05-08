@@ -54,3 +54,13 @@ func (t *taskPG) EditTask(task *entity.Task) errs.MessageErr {
 
 	return nil
 }
+
+func (t *taskPG) DeleteTask(taskId uint) errs.MessageErr {
+	result := t.db.Delete(&entity.Task{}, taskId)
+
+	if result.Error != nil {
+		return errs.NewInternalServerError("Internal Server Error")
+	}
+
+	return nil
+}

@@ -9,4 +9,5 @@ type TaskRepository interface {
 	CreateTask(task *entity.Task) errs.MessageErr
 	GetTaskById(taskId uint) (*entity.Task, errs.MessageErr)
 	EditTask(task *entity.Task) errs.MessageErr
+	DeleteTask(taskId uint) errs.MessageErr
 }

@@ -127,3 +127,26 @@ func (th *taskHandler) UpdateTaskCategory(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, result)
 }
+
+func (th *taskHandler) DeleteTask(ctx *gin.Context) {
+
+	id, err := helpers.GetParamId(ctx, "id")
+
+	if err != nil {
+		ctx.JSON(err.Status(), err)
+		return
+	}
+
+	userData := ctx.MustGet("userData").(*entity.User)
+
+	err = th.taskService.DeleteTask(id, userData.ID)
+
+	if err != nil {
+		ctx.JSON(err.Status(), err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "Task has been successfully deleted",
+	})
+}

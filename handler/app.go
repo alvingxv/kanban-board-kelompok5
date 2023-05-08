@@ -71,6 +71,7 @@ func StartApp() {
 		taskRoute.PUT("/:id", authService.Authentication(), taskHandler.EditTask)
 		taskRoute.PATCH("/update-status/:id", authService.Authentication(), taskHandler.UpdateTaskStatus)
 		taskRoute.PATCH("/update-category/:id", authService.Authentication(), taskHandler.UpdateTaskCategory)
+		taskRoute.DELETE("/:id", authService.Authentication(), taskHandler.DeleteTask)
 	}
 	r.Run("127.0.0.1:" + port)
 }
