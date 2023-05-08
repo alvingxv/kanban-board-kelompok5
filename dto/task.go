@@ -43,3 +43,16 @@ type UpdateTaskStatusResponse struct {
 	CategoryID  uint      `json:"category_id"`
 	UpdatedAt   time.Time `json:"updated_at"`
 }
+
+type UpdateTaskCategoryRequest struct {
+	CategoryId uint `json:"category_id" valid:"required~status cannot be empty"`
+}
+type UpdateTaskCategoryResponse struct {
+	ID          uint      `json:"id"`
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	Status      bool      `json:"status"`
+	UserID      uint      `json:"user_id"`
+	CategoryID  uint      `json:"category_id"`
+	UpdatedAt   time.Time `json:"updated_at"`
+}

@@ -99,3 +99,31 @@ func (th *taskHandler) UpdateTaskStatus(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, result)
 }
+
+func (th *taskHandler) UpdateTaskCategory(ctx *gin.Context) {
+	var updateRequest dto.UpdateTaskCategoryRequest
+
+	if err := ctx.ShouldBindJSON(&updateRequest); err != nil {
+		fmt.Print(err.Error())
+		errBindJson := errs.NewUnprocessibleEntityError("invalid request body")
+		ctx.JSON(errBindJson.Status(), errBindJson)
+		return
+	}
+
+	id, err := helpers.GetParamId(ctx, "id")
+
+	if err != nil {
+		ctx.JSON(err.Status(), err)
+		return
+	}
+
+	userData := ctx.MustGet("userData").(*entity.User)
+
+	result, err := th.taskService.UpdateTaskCategory(updateRequest, id, userData.ID)
+
+	if err != nil {
+		ctx.JSON(err.Status(), err)
+		return
+	}
+	ctx.JSON(http.StatusOK, result)
+}
