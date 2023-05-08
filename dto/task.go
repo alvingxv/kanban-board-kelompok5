@@ -30,3 +30,16 @@ type EditTaskResponse struct {
 	CategoryID  uint      `json:"category_id"`
 	UpdatedAt   time.Time `json:"updated_at"`
 }
+
+type UpdateStatusRequest struct {
+	Status bool `json:"status" valid:"required~status cannot be empty"`
+}
+type UpdateStatusResponse struct {
+	ID          uint      `json:"id"`
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	Status      bool      `json:"status"`
+	UserID      uint      `json:"user_id"`
+	CategoryID  uint      `json:"category_id"`
+	UpdatedAt   time.Time `json:"updated_at"`
+}

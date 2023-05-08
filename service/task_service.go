@@ -16,6 +16,7 @@ type taskService struct {
 type TaskService interface {
 	CreateTask(payload dto.CreateTaskRequest, userId uint) (*dto.CreateTaskResponse, errs.MessageErr)
 	EditTask(payload dto.EditTaskRequest, taskId uint, userId uint) (*dto.EditTaskResponse, errs.MessageErr)
+	UpdateStatusTask(payload dto.UpdateStatusRequest, taskId uint, userId uint) (*dto.UpdateStatusResponse, errs.MessageErr)
 }
 
 func NewTaskService(taskRepo task_repository.TaskRepository, categoryRepo category_repository.CategoryRepository) TaskService {
@@ -81,6 +82,39 @@ func (ts *taskService) EditTask(payload dto.EditTaskRequest, taskId uint, userId
 	}
 
 	response := dto.EditTaskResponse{
+		ID:          task.ID,
+		Title:       task.Title,
+		Description: task.Description,
+		Status:      task.Status,
+		UserID:      task.UserID,
+		CategoryID:  task.CategoryID,
+		UpdatedAt:   task.UpdatedAt,
+	}
+
+	return &response, nil
+}
+
+func (ts *taskService) UpdateStatusTask(payload dto.UpdateStatusRequest, taskId uint, userId uint) (*dto.UpdateStatusResponse, errs.MessageErr) {
+
+	task, err := ts.taskRepo.GetTaskById(taskId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if task.UserID != userId {
+		return nil, errs.NewUnauthorizedError("Unauthorized")
+	}
+
+	task.Status = payload.Status
+
+	err = ts.taskRepo.EditTask(task)
+
+	if err != nil {
+		return nil, err
+	}
+
+	response := dto.UpdateStatusResponse{
 		ID:          task.ID,
 		Title:       task.Title,
 		Description: task.Description,
