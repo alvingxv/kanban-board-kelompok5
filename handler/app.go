@@ -68,6 +68,7 @@ func StartApp() {
 	taskRoute := r.Group("/tasks")
 	{
 		taskRoute.POST("", authService.Authentication(), taskHandler.CreateTask)
+		taskRoute.PUT("/:id", authService.Authentication(), taskHandler.EditTask)
 	}
 	r.Run("127.0.0.1:" + port)
 }
