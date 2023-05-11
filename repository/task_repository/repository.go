@@ -6,6 +6,7 @@ import (
 )
 
 type TaskRepository interface {
+	GetTasks(userId uint) ([]entity.Task, errs.MessageErr)
 	CreateTask(task *entity.Task) errs.MessageErr
 	GetTaskById(taskId uint) (*entity.Task, errs.MessageErr)
 	EditTask(task *entity.Task) errs.MessageErr

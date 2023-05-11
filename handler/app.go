@@ -75,6 +75,7 @@ func StartApp() {
 	{
 		taskRoute.Use(authService.Authentication())
 
+		taskRoute.GET("", taskHandler.GetTasks)
 		taskRoute.POST("", taskHandler.CreateTask)
 		taskRoute.PUT("/:id", taskHandler.EditTask)
 		taskRoute.PATCH("/update-status/:id", taskHandler.UpdateTaskStatus)

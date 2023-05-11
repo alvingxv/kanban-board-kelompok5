@@ -19,6 +19,22 @@ func NewTaskPG(db *gorm.DB) task_repository.TaskRepository {
 	}
 }
 
+func (t *taskPG) GetTasks(userId uint) ([]entity.Task, errs.MessageErr) {
+	var tasks []entity.Task
+	var user entity.User
+
+	err := t.db.Preload("Tasks").Where("id = ?", userId).First(&user).Error
+
+	tasks = user.Tasks
+
+	if err != nil {
+		return nil, errs.NewInternalServerError("something Went Wrong")
+	}
+
+	return tasks, nil
+
+}
+
 func (t *taskPG) CreateTask(task *entity.Task) errs.MessageErr {
 	err := t.db.Debug().Create(&task).Error
 

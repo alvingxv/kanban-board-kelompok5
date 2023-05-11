@@ -14,6 +14,7 @@ type taskService struct {
 }
 
 type TaskService interface {
+	GetTasks(userData *entity.User) (*[]dto.GetTasksResponse, errs.MessageErr)
 	CreateTask(payload dto.CreateTaskRequest, userId uint) (*dto.CreateTaskResponse, errs.MessageErr)
 	EditTask(payload dto.EditTaskRequest, taskId uint, userId uint) (*dto.EditTaskResponse, errs.MessageErr)
 	UpdateStatusTask(payload dto.UpdateTaskStatusRequest, taskId uint, userId uint) (*dto.UpdateTaskStatusResponse, errs.MessageErr)
@@ -26,6 +27,38 @@ func NewTaskService(taskRepo task_repository.TaskRepository, categoryRepo catego
 		taskRepo:     taskRepo,
 		categoryRepo: categoryRepo,
 	}
+}
+
+func (ts *taskService) GetTasks(userData *entity.User) (*[]dto.GetTasksResponse, errs.MessageErr) {
+
+	tasks, err := ts.taskRepo.GetTasks(userData.ID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var responses []dto.GetTasksResponse
+
+	for _, task := range tasks {
+		response := dto.GetTasksResponse{
+			ID:          task.ID,
+			Title:       task.Title,
+			Status:      task.Status,
+			Description: task.Description,
+			UserID:      task.UserID,
+			CategoryID:  task.CategoryID,
+			CreatedAt:   task.CreatedAt,
+			User: dto.UserTask{
+				ID:       userData.ID,
+				Email:    userData.Email,
+				Fullname: userData.Fullname,
+			},
+		}
+
+		responses = append(responses, response)
+	}
+
+	return &responses, nil
 }
 
 func (ts *taskService) CreateTask(payload dto.CreateTaskRequest, userId uint) (*dto.CreateTaskResponse, errs.MessageErr) {

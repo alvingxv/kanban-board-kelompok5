@@ -22,6 +22,20 @@ func NewTaskHandler(taskService service.TaskService) taskHandler {
 	}
 }
 
+func (th *taskHandler) GetTasks(ctx *gin.Context) {
+
+	userData := ctx.MustGet("userData").(*entity.User)
+
+	result, err := th.taskService.GetTasks(userData)
+
+	if err != nil {
+		ctx.JSON(err.Status(), err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, result)
+}
+
 func (th *taskHandler) CreateTask(ctx *gin.Context) {
 	userData := ctx.MustGet("userData").(*entity.User)
 
