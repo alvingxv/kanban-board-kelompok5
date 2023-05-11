@@ -1,6 +1,25 @@
 package dto
 
-import "time"
+import (
+	"time"
+)
+
+type GetTasksResponse struct {
+	ID          uint      `json:"id"`
+	Title       string    `json:"title"`
+	Status      bool      `json:"status"`
+	Description string    `json:"description"`
+	UserID      uint      `json:"user_id"`
+	CategoryID  uint      `json:"category_id"`
+	CreatedAt   time.Time `json:"created_at"`
+	User        UserTask  `json:"User"`
+}
+
+type UserTask struct {
+	ID       uint   `json:"id"`
+	Email    string `json:"email"`
+	Fullname string `json:"full_name"`
+}
 
 type CreateTaskRequest struct {
 	Title       string `json:"title" valid:"required~title cannot be empty"`
