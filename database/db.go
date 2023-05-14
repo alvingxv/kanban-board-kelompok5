@@ -19,6 +19,15 @@ var (
 	dialect  = "postgres"
 )
 
+// var (
+// 	host     = "localhost"
+// 	port     = "5432"
+// 	user     = "root"
+// 	password = "root"
+// 	dbname   = "kanban-hacktiv"
+// 	dialect  = "postgres"
+// )
+
 var db *gorm.DB
 
 func HandleDatabaseConnection() {
