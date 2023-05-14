@@ -84,5 +84,5 @@ func StartApp() {
 		taskRoute.PATCH("/update-category/:id", taskHandler.UpdateTaskCategory)
 		taskRoute.DELETE("/:id", taskHandler.DeleteTask)
 	}
-	r.Run("127.0.0.1:" + port)
+	r.Run(":" + port)
 }
