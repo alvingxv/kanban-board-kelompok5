@@ -1,8 +1,9 @@
 package handler
 
 import (
+	"os"
+
 	"github.com/alvingxv/kanban-board-kelompok5/database"
-	"github.com/alvingxv/kanban-board-kelompok5/pkg/helpers"
 	"github.com/alvingxv/kanban-board-kelompok5/repository/category_repository/category_pg"
 	"github.com/alvingxv/kanban-board-kelompok5/repository/task_repository/task_pg"
 	"github.com/alvingxv/kanban-board-kelompok5/repository/user_repository/user_pg"
@@ -37,7 +38,8 @@ func StartApp() {
 	// Auth Injecttion
 	authService := service.NewAuthService(userRepo)
 
-	port := helpers.GoDotEnvVariable("PORT")
+	port := os.Getenv("PORT")
+	// port := helpers.GoDotEnvVariable("PORT")
 	r := gin.Default()
 
 	docs.SwaggerInfo.Title = "Kanban Board Kelompok 5"

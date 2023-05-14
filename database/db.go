@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/alvingxv/kanban-board-kelompok5/entity"
 	"golang.org/x/crypto/bcrypt"
@@ -9,12 +10,12 @@ import (
 	"gorm.io/gorm"
 )
 
-const (
-	host     = "localhost"
-	port     = "5432"
-	user     = "root"
-	password = "root"
-	dbname   = "kanban-hacktiv"
+var (
+	host     = os.Getenv("PGHOST")
+	port     = os.Getenv("PGPORT")
+	user     = os.Getenv("PGUSER")
+	password = os.Getenv("PGPASSWORD")
+	dbname   = os.Getenv("PGDATABASE")
 	dialect  = "postgres"
 )
 
