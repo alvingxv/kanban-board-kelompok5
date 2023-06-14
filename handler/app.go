@@ -4,12 +4,12 @@ import (
 	"os"
 
 	"github.com/alvingxv/kanban-board-kelompok5/database"
+	"github.com/alvingxv/kanban-board-kelompok5/docs"
 	"github.com/alvingxv/kanban-board-kelompok5/repository/category_repository/category_pg"
 	"github.com/alvingxv/kanban-board-kelompok5/repository/task_repository/task_pg"
 	"github.com/alvingxv/kanban-board-kelompok5/repository/user_repository/user_pg"
 	"github.com/alvingxv/kanban-board-kelompok5/service"
 	"github.com/gin-gonic/gin"
-	"github.com/swaggo/swag/example/override/docs"
 
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -39,6 +39,7 @@ func StartApp() {
 	authService := service.NewAuthService(userRepo)
 
 	port := os.Getenv("PORT")
+	// port := "4000"
 	// port := helpers.GoDotEnvVariable("PORT")
 	r := gin.Default()
 
@@ -46,7 +47,7 @@ func StartApp() {
 	docs.SwaggerInfo.Description = "Final Project 3 Hactiv8 by Kelompok 5"
 	docs.SwaggerInfo.Version = "1.0"
 	docs.SwaggerInfo.Host = "localhost"
-	docs.SwaggerInfo.Schemes = []string{"http"}
+	docs.SwaggerInfo.Schemes = []string{"https"}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
