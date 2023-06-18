@@ -9,6 +9,7 @@ import (
 	"github.com/alvingxv/kanban-board-kelompok5/repository/task_repository/task_pg"
 	"github.com/alvingxv/kanban-board-kelompok5/repository/user_repository/user_pg"
 	"github.com/alvingxv/kanban-board-kelompok5/service"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
 	swaggerfiles "github.com/swaggo/files"
@@ -42,6 +43,7 @@ func StartApp() {
 	// port := "4000"
 	// port := helpers.GoDotEnvVariable("PORT")
 	r := gin.Default()
+	r.Use(cors.Default())
 
 	docs.SwaggerInfo.Title = "Kanban Board Kelompok 5"
 	docs.SwaggerInfo.Description = "Final Project 3 Hactiv8 by Kelompok 5"
