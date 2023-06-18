@@ -44,7 +44,7 @@ func StartApp() {
 	// port := helpers.GoDotEnvVariable("PORT")
 	r := gin.Default()
 	config := cors.DefaultConfig()
-	config.AddAllowHeaders()
+	config.AllowHeaders = []string{"authorization"}
 	config.AllowAllOrigins = true
 	r.Use(cors.New(config))
 
