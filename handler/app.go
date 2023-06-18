@@ -43,7 +43,10 @@ func StartApp() {
 	// port := "4000"
 	// port := helpers.GoDotEnvVariable("PORT")
 	r := gin.Default()
-	r.Use(cors.Default())
+	config := cors.DefaultConfig()
+	config.AddAllowHeaders()
+	config.AllowAllOrigins = true
+	r.Use(cors.New(config))
 
 	docs.SwaggerInfo.Title = "Kanban Board Kelompok 5"
 	docs.SwaggerInfo.Description = "Final Project 3 Hactiv8 by Kelompok 5"
